@@ -66,11 +66,25 @@ def video_swap(video_path, id_vetor, swap_model, detect_model, save_path, temp_r
         net =None
 
     # while ret:
+    all_frame=[]
     for frame_index in tqdm(range(frame_count)): 
         ret, frame = video.read()
-        if  ret:
-            detect_results = detect_model.get(frame,crop_size)
+        if frame_index==0:
+            scale_percent = 50 # percent of original size
+            width = int(frame.shape[1] * scale_percent / 100)
+            height = int(frame.shape[0] * scale_percent / 100)
+            dim = (width, height)
+            original = (frame.shape[1],frame.shape[0])
+            
+        # resize image
+        frame = cv2.resize(frame, dim, interpolation = cv2.INTER_AREA)
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
+        if  ret:
+            # import time
+            # start = time.time()
+            detect_results = detect_model.get(frame,crop_size)
+            # print("stopp",time.time()-start)
             if detect_results is not None:
                 # print(frame_index)
                 if not os.path.exists(temp_results_dir):
@@ -93,26 +107,30 @@ def video_swap(video_path, id_vetor, swap_model, detect_model, save_path, temp_r
 
                     
 
-                reverse2wholeimage(frame_align_crop_tenor_list,swap_result_list, frame_mat_list, crop_size, frame, logoclass,\
+                frame = reverse2wholeimage(frame_align_crop_tenor_list,swap_result_list, frame_mat_list, crop_size, frame, logoclass,\
                     os.path.join(temp_results_dir, 'frame_{:0>7d}.jpg'.format(frame_index)),no_simswaplogo,pasring_model =net,use_mask=use_mask, norm = spNorm)
-
+                all_frame.append(frame)
             else:
                 if not os.path.exists(temp_results_dir):
                     os.mkdir(temp_results_dir)
                 frame = frame.astype(np.uint8)
                 if not no_simswaplogo:
                     frame = logoclass.apply_frames(frame)
-                cv2.imwrite(os.path.join(temp_results_dir, 'frame_{:0>7d}.jpg'.format(frame_index)), frame)
+                # cv2.imwrite(os.path.join(temp_results_dir, 'frame_{:0>7d}.jpg'.format(frame_index)), frame)
+                all_frame.append(frame)
+
         else:
             break
 
     video.release()
 
     # image_filename_list = []
-    path = os.path.join(temp_results_dir,'*.jpg')
-    image_filenames = sorted(glob.glob(path))
+    # path = os.path.join(temp_results_dir,'*.jpg')
+    # image_filenames = sorted(glob.glob(path))
 
-    clips = ImageSequenceClip(image_filenames,fps = fps)
+    # clips = ImageSequenceClip(image_filenames,fps = fps)
+    all_frame = [cv2.resize(i, original, interpolation = cv2.INTER_AREA) for i in all_frame]
+    clips = ImageSequenceClip(all_frame,fps = fps)
 
     if not no_audio:
         clips = clips.set_audio(video_audio_clip)

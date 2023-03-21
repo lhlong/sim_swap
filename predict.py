@@ -1,4 +1,7 @@
 import cog
+# from cog import BasePredictor, Input, Path
+from typing import Any
+
 import tempfile
 from pathlib import Path
 import argparse
@@ -16,18 +19,18 @@ from insightface_func.face_detect_crop_multi import Face_detect_crop as Face_det
 from insightface_func.face_detect_crop_single import Face_detect_crop as Face_detect_crop_single
 
 
-class Predictor(cog.Predictor):
+class Predictor(cog.BasePredictor):
     def setup(self):
         self.transformer_Arcface = transforms.Compose([
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
         ])
 
-    @cog.input("source", type=Path, help="source image")
-    @cog.input("target", type=Path, help="target image")
-    @cog.input("mode", type=str, options=['single', 'all'], default='all',
-               help="swap a single face (the one with highest confidence by face detection) or all faces in the target image")
-    def predict(self, source, target, mode='all'):
+    # @cog.Input("source", type=Path, help="source image")
+    # @cog.Input("target", type=Path, help="target image")
+    # @cog.Input("mode", type=str, options=['single', 'all'], default='all',
+            #    help="swap a single face (the one with highest confidence by face detection) or all faces in the target image")
+    def predict(self, source: cog.Path = cog.Input(description="source image"), target : cog.Path = cog.Input(description="target image"), mode: str = 'all')-> Any:
 
         app = Face_detect_crop_multi(name='antelope', root='./insightface_func/models')
 
