@@ -8,7 +8,13 @@ services:
       ports:
         - 8006:8006
       command: "uvicorn main:app --host 0.0.0.0 --port 8006 --reload --log-level debug"
-
+      deploy:
+        resources:
+          reservations:
+            devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]
 
       restart: always
 
