@@ -39,7 +39,14 @@ transformer_Arcface = transforms.Compose([
 
 
 if __name__ == '__main__':
-    opt = TestOptions().parse()
+    opt = TestOptions()
+
+    opt.initialize()
+    opt.parser.add_argument('-f') ## dummy arg to avoid bug
+    opt = opt.parse()
+    opt.pic_a_path = './demo_file/Iron_man.jpg' ## or replace it with image from your own google drive
+    opt.video_path = './demo_file//video4.mp4' ## or replace it with video from your own google drive
+    opt.output_path = './output/demo2.mp4'
 
     start_epoch, epoch_iter = 1, 0
     crop_size = opt.crop_size
