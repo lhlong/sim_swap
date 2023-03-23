@@ -19,6 +19,8 @@ from options.test_options import TestOptions
 from insightface_func.face_detect_crop_single import Face_detect_crop
 from util.videoswap import video_swap
 import os
+import time
+
 
 def lcm(a, b): return abs(a * b) / fractions.gcd(a, b) if a and b else 0
 
@@ -44,10 +46,19 @@ if __name__ == '__main__':
     opt.initialize()
     opt.parser.add_argument('-f') ## dummy arg to avoid bug
     opt = opt.parse()
-    opt.pic_a_path = './demo_file/Iron_man.jpg' ## or replace it with image from your own google drive
-    opt.video_path = './demo_file//video4.mp4' ## or replace it with video from your own google drive
-    opt.output_path = './output/demo2.mp4'
+    input_dir = "./demo_file"
+    output_dir = "./output"
+    image_filename = 'Iron_man.jpg'
+    video_filename = "video4.mp4"
+    opt.pic_a_path = os.path.join(input_dir, image_filename) ## or replace it with image from your own google drive
+    opt.video_path = os.path.join(input_dir, image_filename) ## or replace it with video from your own google drive
+    opt.output_path = os.path.join(output_dir, video_filename.split('.')[0] + "_" + image_filename.split('.')[0])
+    
+    print(opt.pic_a_path)
+    print(opt.video_path)
+    print(opt.output_path)
 
+    t1 = time.time()
     start_epoch, epoch_iter = 1, 0
     crop_size = opt.crop_size
 
@@ -92,3 +103,4 @@ if __name__ == '__main__':
         video_swap(opt.video_path, latend_id, model, app, opt.output_path,temp_results_dir=opt.temp_path,\
             no_simswaplogo=opt.no_simswaplogo,use_mask=opt.use_mask,crop_size=crop_size)
 
+    print("Total time: ", time.time()-t1)

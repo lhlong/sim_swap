@@ -16,7 +16,7 @@ RUN apt-get update
 RUN apt-get install python3.8 -y 
 RUN apt-get install python3.8-distutils -y
 RUN apt-get install python3.8-tk -y
-RUN apt-get install curl -y
+RUN apt-get install curl nano -y
 RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
 RUN python3.8 get-pip.py
 RUN rm get-pip.py

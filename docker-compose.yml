@@ -8,6 +8,8 @@ services:
       ports:
         - 8006:8006
       command: "uvicorn main:app --host 0.0.0.0 --port 8006 --reload --log-level debug"
+      volumes:
+        - ./:/server
       deploy:
         resources:
           reservations:
