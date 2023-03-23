@@ -10,6 +10,8 @@ from options.test_options import TestOptions
 from insightface_func.face_detect_crop_multi import Face_detect_crop
 from util.videoswap import video_swap
 from util.add_watermark import watermark_image
+import os
+
 
 transformer = transforms.Compose([
         transforms.ToTensor(),
@@ -34,11 +36,27 @@ opt = TestOptions()
 opt.initialize()
 opt.parser.add_argument('-f') ## dummy arg to avoid bug
 opt = opt.parse()
-opt.pic_a_path = './demo_file/Iron_man.jpg' ## or replace it with image from your own google drive
+# opt.pic_a_path = './demo_file/Iron_man.jpg' ## or replace it with image from your own google drive
 #opt.pic_a_path = './demo_file/multispecific/DST_01.jpg'
 # opt.video_path = './demo_file/multi_people_1080p.mp4' ## or replace it with video from your own google drive
-opt.video_path = './demo_file/video4.mp4' ## or replace it with video from your own google drive
-opt.output_path = './output/demo_video4.mp4'
+# opt.video_path = './demo_file/video4.mp4' ## or replace it with video from your own google drive
+
+# opt.video_path = './demo_file/video4.mp4' ## or replace it with video from your own google drive
+# opt.output_path = './output/demo_video4.mp4'
+
+
+input_dir = "./demo_file"
+output_dir = "./output"
+image_filename = 'Iron_man.jpg'
+video_filename = "video4.mp4"
+opt.pic_a_path = os.path.join(input_dir, image_filename) ## or replace it with image from your own google drive
+opt.video_path = os.path.join(input_dir, video_filename) ## or replace it with video from your own google drive
+opt.output_path = os.path.join(output_dir, video_filename.split('.')[0] + "_" + image_filename.split('.')[0] + ".mp4")
+
+print(opt.pic_a_path)
+print(opt.video_path)
+print(opt.output_path)
+
 opt.temp_path = './tmp'
 opt.Arc_path = './arcface_model/arcface_checkpoint.tar'
 opt.isTrain = False

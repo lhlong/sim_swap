@@ -51,7 +51,7 @@ if __name__ == '__main__':
     image_filename = 'Iron_man.jpg'
     video_filename = "video4.mp4"
     opt.pic_a_path = os.path.join(input_dir, image_filename) ## or replace it with image from your own google drive
-    opt.video_path = os.path.join(input_dir, image_filename) ## or replace it with video from your own google drive
+    opt.video_path = os.path.join(input_dir, video_filename) ## or replace it with video from your own google drive
     opt.output_path = os.path.join(output_dir, video_filename.split('.')[0] + "_" + image_filename.split('.')[0] + ".mp4")
     
     print(opt.pic_a_path)
