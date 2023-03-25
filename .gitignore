@@ -140,3 +140,6 @@ checkpoints/
 *.pth
 *.onnx
 wandb/
+
+*.mp4
+.vscode/
